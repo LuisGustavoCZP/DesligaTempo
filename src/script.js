@@ -7,6 +7,7 @@ const miEl = document.getElementById("mi");
 const seEl = document.getElementById("se");
 
 
+
 function addTime()
 {
     const seconds = parseInt(document.getElementById("seconds-amount").value);
@@ -37,6 +38,22 @@ function setTime()
     });
 }
 
+document.getElementById("acao-selector").onchange = setAction;
+function setAction()
+{
+    const action = document.getElementById("acao-selector").value;
+    console.log(action);
+
+    fetch(`/set?action=${action}`)
+    .then(res => res.json())
+    .then(res => {
+        console.log("Deu bom!", res)
+    })
+    .catch(err => {
+        console.log("Oou deu problema!", err)
+    });
+}
+
 socket.on('connect', ()=>
 {
     const playerId = socket.id;
@@ -51,8 +68,10 @@ socket.on('disconnect', ()=>
     offEl.classList.remove("hidden");
 });
 
-socket.on('setup', (timer)=>
+socket.on('setup', (resp)=>
 {
+    //console.log(resp);
+    let {timeoutAction, timer=0} = resp;
     const playerId = socket.id;
     timer = Math.floor(timer/1000);
     const sec = timer%60;
@@ -64,4 +83,6 @@ socket.on('setup', (timer)=>
     miEl.innerText = min;
     seEl.innerText = sec;
     onEl.classList.remove("hidden");
+
+    document.getElementById("acao-selector").value = timeoutAction;
 });

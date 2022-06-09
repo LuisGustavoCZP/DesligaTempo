@@ -23,8 +23,8 @@ main {
 .relogio {
     color: black;
     display: flex;
-    width: 90vmin;
-    height: 90vmin;
+    width: 80vmin;
+    height: 80vmin;
     border-radius: 50%;
     background-color: white;
     justify-content: center;
@@ -46,11 +46,6 @@ main {
     width: 100%;
 }
 
-.controls > select {
-    background-color: aliceblue;
-    font-size: 1em;
-}
-
 .controls > span > * {
     display: flex;
     padding: 10px;
@@ -60,6 +55,12 @@ main {
     justify-content: center;
 }
 
+.pointeiro {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
 #offline {
     color: red;
 }
@@ -67,4 +68,9 @@ main {
 .hidden 
 {
     display: none;
+}
+
+select {
+    background-color: aliceblue;
+    font-size: 1em;
 }

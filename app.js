@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require('socket.io');
 const { Execute } = require('./modules/bat');
 const Timer = require('./modules/timers');
-
+let timeoutAction = 'sleep';
 const port = 80;
 
 const app = express();
@@ -15,10 +15,19 @@ app.use(express.static('src'));
 
 app.get("/set", async (req, res) => 
 {
-    const { time } = req.query;
-    const r = Timer.set(time*1000);
-    console.log(`Setting time ${time} milisecounds = ${r}`);
-    res.json(r);
+    const { time, action } = req.query;
+    if(time)
+    {
+        const r = Timer.set(time*1000);
+        console.log(`Setting time ${time} milisecounds = ${r}`);
+        res.json(r);
+    } else
+    if(action)
+    {
+        timeoutAction = action;
+        res.json(action);
+    }
+    
 });
 
 app.get("/add", async (req, res) => 
@@ -65,7 +74,7 @@ async function update ()
         {
             setTimeout(() => 
             {
-                Execute('shutdown');
+                Execute(timeoutAction);
             }, 1000);
         }
         );
@@ -75,7 +84,7 @@ async function update ()
         setTimeout(update, 500);
         sendAll((connection) => 
         {
-            connection.emit('setup', timeNow);
+            connection.emit('setup', {timeoutAction:timeoutAction, timer:timeNow});
         });
     }
 }
